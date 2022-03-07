@@ -13,7 +13,7 @@ resource "aws_iam_role" "challenge1_lambda" {
         Effect = "Allow"
         Sid    = ""
         Principal = {
-          Service = "ec2.amazonaws.com"
+          Service = // change service "ec2.amazonaws.com"
         }
       },
     ]
