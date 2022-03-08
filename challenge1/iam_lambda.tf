@@ -32,8 +32,8 @@ resource "aws_lambda_function" "challenge1_lambda" {
 
   runtime = "nodejs12.x"
 
-//  environment {
-//    variables = {
+  environment {
+    variables = {
 //      foo = "bar"
     }
   }
