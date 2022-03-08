@@ -36,7 +36,7 @@ data "archive_file" "lambda_challenge1" {
 }
 
 resource "aws_s3_bucket" "lambda_challenge1" {
-  bucket = aws_s3_bucket.lambda_bucket.id
+  bucket = aws_s3_bucket.lambda_challenge1.id
 
   key    = "challenge1.zip"
   source = data.archive_file.lambda_challenge1.output_path
@@ -47,7 +47,7 @@ resource "aws_s3_bucket" "lambda_challenge1" {
 resource "aws_lambda_function" "challenge1" {
   function_name = "challenge1"
 
-  s3_bucket = aws_s3_bucket.lambda_bucket.id
+  s3_bucket = aws_s3_bucket.lambda_challenge1.id
   s3_key    = aws_s3_object.lambda_challenge1.key
 
   runtime = "nodejs12.x"
