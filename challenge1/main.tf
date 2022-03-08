@@ -35,7 +35,7 @@ data "archive_file" "lambda_challenge1" {
   output_path = "${path.module}/challenge1.zip"
 }
 
-resource "aws_s3_object" "lambda_challenge1" {
+resource "aws_s3_bucket" "lambda_challenge1" {
   bucket = aws_s3_bucket.lambda_bucket.id
 
   key    = "challenge1.zip"
