@@ -28,39 +28,19 @@ resource "aws_iam_role" "lambda_exec" {
   })
 }
 
-data "archive_file" "lambda_challenge1" {
-  type = "zip"
-
-  source_dir  = "${path.module}/challenge1"
-  output_path = "${path.module}/challenge1.zip"
-}
-
-resource "aws_s3_bucket" "lambda_challenge1" {
-  bucket = aws_s3_bucket.lambda_challenge1.id
-
-  key    = "challenge1.zip"
-  source = data.archive_file.lambda_challenge1.output_path
-
-  etag = filemd5(data.archive_file.lambda_challenge1.output_path)
-}
-
 resource "aws_lambda_function" "challenge1" {
-  function_name = "challenge1"
+  filename      = "challenge-01.zip"
+  function_name = "handler"
+  role          = aws_iam_role.iam_for_lambda.arn
+  handler       = "index.handler"
 
-  s3_bucket = aws_s3_bucket.lambda_challenge1.id
-  s3_key    = aws_s3_object.lambda_challenge1.key
+  source_code_hash = filebase64sha256("challenge-01.zip")
 
-  runtime = "nodejs12.x"
-  handler = "challenge1.handler"
+  runtime = "nodejs14.x"
 
-  source_code_hash = data.archive_file.lambda_challenge1.output_base64sha256
-
-  role = aws_iam_role.lambda_exec.arn
-}
-
-
-resource "aws_cloudwatch_log_group" "challenge1" {
-  name = "/aws/lambda/${aws_lambda_function.challenge1.function_name}"
-
-  retention_in_days = 30
+  environment {
+    variables = {
+      foo = "bar"
+    }
+  }
 }
