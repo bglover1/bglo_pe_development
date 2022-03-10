@@ -30,13 +30,13 @@ resource "aws_iam_role" "lambda_exec" {
 
 resource "aws_lambda_function" "challenge1" {
   filename      = "challenge-01.zip"
-  function_name = "handler"
-  role          = aws_iam_role.iam_for_lambda.arn
-  handler       = "index.handler"
+  function_name = "Bens-Function"
+  role          = aws_iam_role.lambda_exec.arn
+  handler       = "challenge-01"
 
   source_code_hash = filebase64sha256("challenge-01.zip")
 
-  runtime = "nodejs14.x"
+  runtime = "go1.x"
 
   environment {
     variables = {
