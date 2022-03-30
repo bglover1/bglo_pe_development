@@ -1,18 +1,17 @@
-resource "aws_ssm_parameter" "foo" {
-  name  = "foo"
-  type  = "String"
-  value = "bar"
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+}
+provider "aws" {
+  region = "us-east-1"
 }
 
-resource "aws_ssm_parameter" "secret" {
-  name        = "/production/database/password/master"
-  description = "The parameter description"
-  type        = "SecureString"
-  value       = var.database_master_password
-}
-
-resource "aws_iam_role" "lambda_exec" {
-  name = "challenge3_lambda"
+resource "aws_iam_role" "challenge3" {
+  name = "challenge3"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -26,15 +25,45 @@ resource "aws_iam_role" "lambda_exec" {
       }
     ]
   })
+  inline_policy {
+    name = "ssmreadwrite"
+
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action   = ["ssm:*"]
+          Effect   = "Allow"
+          Resource = "*"
+        },
+      ]
+    })
+  }
+
 }
+
 
 resource "aws_lambda_function" "challenge3" {
   filename      = "challenge-03.zip"
   function_name = "Bens-Function"
-  role          = aws_iam_role.lambda_exec.arn
+  role          = aws_iam_role.challenge3.arn
   handler       = "challenge-03"
 
   source_code_hash = filebase64sha256("challenge-03.zip")
 
   runtime = "go1.x"
+
+  environment {
+    variables = {
+      Author   = "Ben",
+      PWD_PATH = aws_ssm_parameter.secret.name
+    }
+  }
+}
+
+resource "aws_ssm_parameter" "secret" {
+  name        = "/bglover/production/database/password/master"
+  description = "The parameter description"
+  type        = "SecureString"
+  value = "changeme1"
 }
