@@ -1,8 +1,8 @@
-Deploy an ecs service
-Ecr repo
-Ecs cluster
-Ecs service
-Task definition 
+Deploy an ecs service:
+Ecr repo - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository
+Ecs cluster - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster
+Ecs service - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service
+Task definition - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition
 Execution role
 Task role
 Build docker image
