@@ -1,0 +1,11 @@
+Deploy an ecs service
+Ecr repo
+Ecs cluster
+Ecs service
+Task definition 
+Execution role
+Task role
+Build docker image
+Push docker image to ecr
+Clone challenge4 from eddies github
+Install docker
