@@ -10,7 +10,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_iam_role" "challenge3" {
+resource "aws_iam_role" "challenge4" {
   name = "challenge3"
 
   assume_role_policy = jsonencode({
@@ -41,6 +41,7 @@ resource "aws_iam_role" "challenge3" {
   }
 
 }
+
 resource "aws_ecr_repository" "foo" {
   name = "bar"
 }
@@ -78,14 +79,32 @@ resource "aws_ecr_repository_policy" "foopolicy" {
 EOF
 }
 
-resource "aws_ecs_cluster" "foo" {
-  name = "white-hart"
 
-  setting {
-    name  = "containerInsights"
-    value = "enabled"
+resource "aws_kms_key" "example" {
+  description             = "example"
+  deletion_window_in_days = 7
+}
+
+resource "aws_cloudwatch_log_group" "example" {
+  name = "example"
+}
+
+resource "aws_ecs_cluster" "test" {
+  name = "example"
+
+  configuration {
+    execute_command_configuration {
+      kms_key_id = aws_kms_key.example.arn
+      logging    = "OVERRIDE"
+
+      log_configuration {
+        cloud_watch_encryption_enabled = true
+        cloud_watch_log_group_name     = aws_cloudwatch_log_group.example.name
+      }
+    }
   }
 }
+
 
 resource "aws_ecs_service" "mongo" {
   name            = "mongodb"
