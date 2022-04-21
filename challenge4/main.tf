@@ -10,8 +10,8 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_iam_role" "challenge4" {
-  name = "challenge3"
+resource "aws_iam_role" "challenge4ecs" {
+  name = "challenge3ecs"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -20,7 +20,7 @@ resource "aws_iam_role" "challenge4" {
       Effect = "Allow"
       Sid    = ""
       Principal = {
-        Service = "lambda.amazonaws.com"
+        Service = "ecs-tasks.amazonaws.com"
       }
       }
     ]
@@ -42,12 +42,12 @@ resource "aws_iam_role" "challenge4" {
 
 }
 
-resource "aws_ecr_repository" "foo" {
-  name = "bar"
+resource "aws_ecr_repository" "challenge4" {
+  name = "challenge4"
 }
 
-resource "aws_ecr_repository_policy" "foopolicy" {
-  repository = aws_ecr_repository.foo.name
+resource "aws_ecr_repository_policy" "challenge4" {
+  repository = aws_ecr_repository.challenge4.name
 
   policy = <<EOF
 {
@@ -85,8 +85,8 @@ resource "aws_kms_key" "example" {
   deletion_window_in_days = 7
 }
 
-resource "aws_cloudwatch_log_group" "example" {
-  name = "example"
+resource "aws_cloudwatch_log_group" "challenge4" {
+  name = "challenge4log"
 }
 
 resource "aws_ecs_cluster" "test" {
