@@ -134,7 +134,7 @@ resource "aws_ecs_task_definition" "service" {
 
   placement_constraints {
     type       = "memberOf"
-    expression = "attribute:ecs.availability-zone in [us-west-2a, us-west-2b]"
+    expression = "attribute:ecs.availability-zone in [us-east-1]"
   }
 }
 
