@@ -124,10 +124,7 @@ resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
         "containerPort": 80,
         "hostPort": 80
       }
-    ]
-  }
-]
-    },
+    ],
          "logConfiguration":{
             "logDriver":"awslogs",
             "options":{
