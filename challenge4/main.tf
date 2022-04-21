@@ -32,7 +32,15 @@ resource "aws_iam_role" "challenge4ecs" {
       Version = "2012-10-17"
       Statement = [
         {
-          Action   = ["ssm:*"]
+          Action   = [
+            "ecs:*",
+            "ecr:GetAuthorizationToken", 
+            "ecr:BatchCheckLayerAvailability",
+            "ecr:GetDownloadUrlForLayer",
+            "ecr:BatchGetImage",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents",
+          ]
           Effect   = "Allow"
           Resource = "*"
         },
@@ -96,36 +104,43 @@ resource "aws_ecs_service" "challenge4ecs" {
   }
 }
 
-resource "aws_ecs_task_definition" "service" {
-  family = "service"
-  container_definitions = jsonencode([
-    {
-      name      = "first"
-      image     = "service-first"
-      cpu       = 10
-      memory    = 512
-      essential = true
-      portMappings = [
-        {
-          containerPort = 80
-          hostPort      = 80
-        }
-      ]
+resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
+  family                   = "ecs-task-definition-demo"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  memory                   = "1024"
+  cpu                      = "512"
+  execution_role_arn       = "arn:aws:iam::123456789012:role/ecsTaskExecutionRole"
+  container_definitions    = <<EOF
+[
+  {
+    "name": "demo-container",
+    "image": "123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-repo:1.0",
+    "memory": 1024,
+    "cpu": 512,
+    "essential": true,
+    "entryPoint": ["/"],
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "hostPort": 80
+      }
+    ]
+  }
+]
     },
-    {
-      name      = "second"
-      image     = "service-second"
-      cpu       = 10
-      memory    = 256
-      essential = true
-      portMappings = [
-        {
-          containerPort = 443
-          hostPort      = 443
-        }
+         "logConfiguration":{
+            "logDriver":"awslogs",
+            "options":{
+               "awslogs-group":"awslogs-nginx-ecs",
+               "awslogs-region":"us-east-1",
+               "awslogs-stream-prefix":"ecs"
+            }
       ]
     }
   ])
+EOF
+}
 
   volume {
     name      = "service-storage"
@@ -138,3 +153,11 @@ resource "aws_ecs_task_definition" "service" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "bg-challenge4" {
+  name = "bg-challenge4"
+
+  tags = {
+    Environment = "sre-nonprod"
+    Application = "test-demo-challenge"
+  }
+}
