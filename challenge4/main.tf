@@ -11,7 +11,7 @@ provider "aws" {
 }
 
 resource "aws_iam_role" "challenge4ecs" {
-  name = "challenge3ecs"
+  name = "challenge4ecs"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -58,20 +58,14 @@ resource "aws_ecr_repository_policy" "challenge4" {
             "Effect": "Allow",
             "Principal": "*",
             "Action": [
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:PutImage",
-                "ecr:InitiateLayerUpload",
-                "ecr:UploadLayerPart",
-                "ecr:CompleteLayerUpload",
-                "ecr:DescribeRepositories",
-                "ecr:GetRepositoryPolicy",
-                "ecr:ListImages",
-                "ecr:DeleteRepository",
-                "ecr:BatchDeleteImage",
-                "ecr:SetRepositoryPolicy",
-                "ecr:DeleteRepositoryPolicy"
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:BatchGetImage",
+          "ecr:CompleteLayerUpload",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:GetLifecyclePolicy",
+          "ecr:InitiateLayerUpload",
+          "ecr:PutImage",
+          "ecr:UploadLayerPart"
             ]
         }
     ]
@@ -79,40 +73,22 @@ resource "aws_ecr_repository_policy" "challenge4" {
 EOF
 }
 
-
-resource "aws_kms_key" "example" {
-  description             = "example"
-  deletion_window_in_days = 7
-}
-
 resource "aws_cloudwatch_log_group" "challenge4" {
   name = "challenge4log"
 }
 
-resource "aws_ecs_cluster" "test" {
-  name = "example"
-
-  configuration {
-    execute_command_configuration {
-      kms_key_id = aws_kms_key.example.arn
-      logging    = "OVERRIDE"
-
-      log_configuration {
-        cloud_watch_encryption_enabled = true
-        cloud_watch_log_group_name     = aws_cloudwatch_log_group.example.name
-      }
-    }
-  }
+resource "aws_ecs_cluster" "challenge4ecs" {
+  name = "challenge4ecs"
 }
 
 
-resource "aws_ecs_service" "mongo" {
-  name            = "mongodb"
-  cluster         = aws_ecs_cluster.foo.id
-  task_definition = aws_ecs_task_definition.mongo.arn
-  desired_count   = 3
-  iam_role        = aws_iam_role.foo.arn
-  depends_on      = [aws_iam_role_policy.foo]
+resource "aws_ecs_service" "challenge4ecs" {
+  name            = "challenge4ecs"
+  cluster         = aws_ecs_cluster.challenge4ecs.id
+  task_definition = aws_ecs_task_definition.challenge4ecs.arn
+  desired_count   = 1
+  iam_role        = aws_iam_role.challenge4ecs.arn
+  depends_on      = [aws_iam_role_policy.challenge4ecs]
 
   ordered_placement_strategy {
     type  = "binpack"
