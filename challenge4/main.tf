@@ -90,18 +90,16 @@ resource "aws_ecs_cluster" "challenge4ecs" {
 }
 
 
-resource "aws_ecs_service" "challenge4ecs" {
-  name            = "challenge4ecs"
-  cluster         = aws_ecs_cluster.challenge4ecs.id
-  task_definition = aws_ecs_task_definition.challenge4ecs.arn
-  desired_count   = 1
-  iam_role        = aws_iam_role.challenge4ecs.arn
-  depends_on      = [aws_iam_role_policy.challenge4ecs]
-
-  ordered_placement_strategy {
-    type  = "binpack"
-    field = "cpu"
+resource "aws_ecs_service" "demo-ecs-service-two" {
+  name            = "demo-app"
+  cluster         = aws_ecs_cluster.demo-ecs-cluster.id
+  task_definition = aws_ecs_task_definition.demo-ecs-task-definition.arn
+  launch_type     = "FARGATE"
+  network_configuration {
+    subnets          = ["subnet-04d1a8df719325825"]
+    assign_public_ip = false
   }
+  desired_count = 1
 }
 
 resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
