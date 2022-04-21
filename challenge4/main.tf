@@ -159,3 +159,21 @@ resource "aws_cloudwatch_log_group" "bg-challenge4" {
     Application = "test-demo-challenge"
   }
 }
+
+resource "aws_security_group" "allow_egress_all" {
+  name        = "allow_egress_all"
+  description = "Allow outbound traffic"
+  vpc_id      = "vpc-06d3f8ac2206caa8b.id"
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  tags = {
+    Name = "allow-egress-all"
+  }
+}
