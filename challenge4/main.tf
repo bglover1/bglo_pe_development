@@ -96,8 +96,8 @@ resource "aws_ecs_service" "demo-ecs-service-two" {
   task_definition = aws_ecs_task_definition.demo-ecs-task-definition.arn
   launch_type     = "FARGATE"
   network_configuration {
-    subnets          = ["subnet-04d1a8df719325825"]
-    assign_public_ip = false
+    subnets          = ["subnet-0ce529e158b34a78b"]
+    assign_public_ip = true
   }
   desired_count = 1
 }
