@@ -141,17 +141,6 @@ resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
 EOF
 }
 
-  volume {
-    name      = "service-storage"
-    host_path = "/ecs/service-storage"
-  }
-
-  placement_constraints {
-    type       = "memberOf"
-    expression = "attribute:ecs.availability-zone in [us-east-1]"
-  }
-}
-
 resource "aws_cloudwatch_log_group" "bg-challenge4" {
   name = "bg-challenge4"
 
