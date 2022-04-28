@@ -41,6 +41,17 @@ resource "aws_iam_role" "ben_iam_for_ecs" {
   }
 }
 
+data "aws_iam_policy_document" "ben_iam_for_ecs" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
 resource "aws_ecr_repository" "challenge4" {
   name = "challenge4"
 }
