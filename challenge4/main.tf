@@ -94,7 +94,7 @@ resource "aws_ecs_service" "demo-ecs-service-two" {
   network_configuration {
     subnets          = ["subnet-0ce529e158b34a78b"]
     assign_public_ip = true
-    security_group  = [aws_security_group.allow_egress_all.id]
+    security_groups  = [aws_security_group.allow_egress_all.id]
   }
   desired_count = 1
 }
