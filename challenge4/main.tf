@@ -14,10 +14,10 @@ terraform {
 
 resource "aws_iam_role" "ben_iam_for_ecs" {
   name = "ben-iam-for-ecs"
-  assume_role_policy = data.aws_iam_policy_document.ben_instance_assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.ben_iam_for_ecs.json
 
     inline_policy {
-    name = "my_inline_policy"
+    name = "ben_iam_for_ecs"
 
     policy = jsonencode({
       Version = "2012-10-17"
