@@ -88,7 +88,7 @@ resource "aws_ecs_cluster" "challenge4ecs" {
 
 resource "aws_ecs_service" "demo-ecs-service-two" {
   name            = "demo-app"
-  cluster         = aws_ecs_cluster.demo-ecs-cluster.id
+  cluster         = aws_ecs_cluster.challenge4ecs.id
   task_definition = aws_ecs_task_definition.demo-ecs-task-definition.arn
   launch_type     = "FARGATE"
   network_configuration {
