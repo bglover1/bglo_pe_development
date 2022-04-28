@@ -105,7 +105,7 @@ resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
   requires_compatibilities = ["FARGATE"]
   memory                   = "1024"
   cpu                      = "512"
-  execution_role_arn = aws_iam_role.cg_iam_for_ecs.arn
+  execution_role_arn = aws_iam_role.ben_iam_for_ecs.arn
   container_definitions    = <<EOF
 [
   {
