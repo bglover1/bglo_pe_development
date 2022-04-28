@@ -14,7 +14,7 @@ terraform {
 
 resource "aws_iam_role" "ben_iam_for_ecs" {
   name = "ben-iam-for-ecs"
-  assume_role_policy = data.aws_iam_policy_document.ben_iam_for_ecs.json
+
 
     inline_policy {
     name = "ben_iam_for_ecs"
