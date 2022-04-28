@@ -130,7 +130,7 @@ resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
             }
       ]
     }
-  ])
+  )
 EOF
 }
 
