@@ -10,36 +10,35 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_iam_role" "challenge4ecs" {
-  name = "challenge4ecs"
+terraform {
+  required_providers {
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "2.16.0"
+    }
+  }
+}
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Sid    = ""
-      Principal = {
-        Service = "ecs-tasks.amazonaws.com"
-      }
-      }
-    ]
-  })
-  inline_policy {
-    name = "ssmreadwrite"
+resource "aws_iam_role" "ben_iam_for_ecs" {
+  name = "ben-iam-for-ecs"
+  assume_role_policy = data.aws_iam_policy_document.ben_instance_assume_role_policy.json
+
+    inline_policy {
+    name = "my_inline_policy"
 
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
         {
           Action   = [
-            "ecs:*",
+            "ecs:*", 
+            "ecr:*",
             "ecr:GetAuthorizationToken", 
             "ecr:BatchCheckLayerAvailability",
             "ecr:GetDownloadUrlForLayer",
             "ecr:BatchGetImage",
             "logs:CreateLogStream",
-            "logs:PutLogEvents",
+            "logs:PutLogEvents"
           ]
           Effect   = "Allow"
           Resource = "*"
@@ -47,7 +46,6 @@ resource "aws_iam_role" "challenge4ecs" {
       ]
     })
   }
-
 }
 
 resource "aws_ecr_repository" "challenge4" {
@@ -56,16 +54,15 @@ resource "aws_ecr_repository" "challenge4" {
 
 resource "aws_ecr_repository_policy" "challenge4" {
   repository = aws_ecr_repository.challenge4.name
-
-  policy = <<EOF
-{
+  policy     = <<EOF
+  {
     "Version": "2008-10-17",
     "Statement": [
-        {
-            "Sid": "new policy",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": [
+      {
+        "Sid": "adds full ecr access to the challenge4 repository",
+        "Effect": "Allow",
+        "Principal": "*",
+        "Action": [
           "ecr:BatchCheckLayerAvailability",
           "ecr:BatchGetImage",
           "ecr:CompleteLayerUpload",
@@ -74,21 +71,16 @@ resource "aws_ecr_repository_policy" "challenge4" {
           "ecr:InitiateLayerUpload",
           "ecr:PutImage",
           "ecr:UploadLayerPart"
-            ]
-        }
+        ]
+      }
     ]
-}
-EOF
-}
-
-resource "aws_cloudwatch_log_group" "challenge4" {
-  name = "challenge4log"
+  }
+  EOF
 }
 
 resource "aws_ecs_cluster" "challenge4ecs" {
   name = "challenge4ecs"
 }
-
 
 resource "aws_ecs_service" "demo-ecs-service-two" {
   name            = "demo-app"
@@ -109,16 +101,16 @@ resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
   requires_compatibilities = ["FARGATE"]
   memory                   = "1024"
   cpu                      = "512"
-  execution_role_arn       = "arn:aws:iam::123456789012:role/ecsTaskExecutionRole"
+  execution_role_arn       = aws_iam_role.ben_iam_for_ecs.arn
   container_definitions    = <<EOF
 [
   {
     "name": "demo-container",
-    "image": "123456789012.dkr.ecr.us-east-1.amazonaws.com/demo-repo:1.0",
+    "image": "676636886737.dkr.ecr.us-east-1.amazonaws.com/challenge4:bendockerimage",
     "memory": 1024,
     "cpu": 512,
     "essential": true,
-    "entryPoint": ["/"],
+    "entryPoint": ["./app"],
     "portMappings": [
       {
         "containerPort": 80,
@@ -142,7 +134,7 @@ resource "aws_cloudwatch_log_group" "bg-challenge4" {
   name = "bg-challenge4"
 
   tags = {
-    Environment = "sre-nonprod"
+    Environment = "noc-sandbox"
     Application = "test-demo-challenge"
   }
 }
