@@ -1,13 +1,18 @@
-provider "aws" {
-  region                   = "us-east-1"
-  #profile                  = "noc-sandbox"
-}
-
 terraform {
   required_providers {
     docker = {
       source  = "kreuzwerker/docker"
-      version = "2.16.0"
+      version = "2.15.0"
+    }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
     }
   }
+}
+
+provider "docker" {}
+
+provider "aws" {
+  region = var.region
 }
