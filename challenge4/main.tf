@@ -132,7 +132,7 @@ resource "aws_cloudwatch_log_group" "bg-challenge4" {
 resource "aws_security_group" "allow_egress_all" {
   name        = "allow_egress_all"
   description = "Allow outbound traffic"
-  vpc_id      = "vpc-06d3f8ac2206caa8b.id"
+  vpc_id      = "vpc-06d3f8ac2206caa8b"
 
   egress {
     from_port        = 0
