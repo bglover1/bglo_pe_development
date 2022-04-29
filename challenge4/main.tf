@@ -1,16 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 3.0"
-    }
-  }
-}
-
-provider "aws" {
-  region = "us-east-1"
-}
-
 resource "aws_iam_role" "ben_iam_for_ecs" {
   name = "ben-iam-for-ecs"
   assume_role_policy = data.aws_iam_policy_document.ben_iam_for_ecs.json
