@@ -110,7 +110,7 @@ resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
     "logConfiguration":{
             "logDriver":"awslogs",
             "options":{
-               "awslogs-group":"Demo-Log-Group",
+               "awslogs-group":"bg-challenge4",
                "awslogs-region":"us-east-1",
                "awslogs-stream-prefix":"ecs"
             }
