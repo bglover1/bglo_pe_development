@@ -96,7 +96,7 @@ resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
 [
   {
     "name": "demo-container",
-    "image": "676636886737.dkr.ecr.us-east-1.amazonaws.com/challenge4:bendockerimage",
+    "image": "676636886737.dkr.ecr.us-east-1.amazonaws.com/challenge4",
     "memory": 1024,
     "cpu": 512,
     "essential": true,
