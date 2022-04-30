@@ -146,3 +146,21 @@ resource "aws_security_group" "allow_egress_all" {
     Name = "allow-egress-all"
   }
 }
+
+resource "aws_db_subnet_group" "bensrds" {
+  name       = "main"
+  subnet_ids = data.aws_db_subnet_group.bensrds.id
+
+  tags = {
+    Name = "My DB subnet group"
+  }
+}
+
+resource "aws_db_security_group" "rds" {
+  name = "rds_sg"
+
+  ingress {
+    cidr = "10.0.0.0/24"
+  }
+}
+
