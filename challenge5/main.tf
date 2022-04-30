@@ -169,7 +169,7 @@ resource "aws_db_security_group" "rds" {
   name = "rds_sg"
 
   ingress {
-    cidr = "10.0.0.0/24"
+    cidr = "100.67.16.0/22"
   }
 }
 
