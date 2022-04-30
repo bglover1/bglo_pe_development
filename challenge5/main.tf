@@ -38,18 +38,18 @@ data "aws_iam_policy_document" "ben_iam_for_ecs" {
   }
 }
 
-resource "aws_ecr_repository" "challenge4" {
-  name = "challenge4"
+resource "aws_ecr_repository" "challenge5" {
+  name = "challenge5"
 }
 
-resource "aws_ecr_repository_policy" "challenge4" {
-  repository = aws_ecr_repository.challenge4.name
+resource "aws_ecr_repository_policy" "challenge5" {
+  repository = aws_ecr_repository.challenge5.name
   policy     = <<EOF
   {
     "Version": "2008-10-17",
     "Statement": [
       {
-        "Sid": "adds full ecr access to the challenge4 repository",
+        "Sid": "adds full ecr access to the challenge5 repository",
         "Effect": "Allow",
         "Principal": "*",
         "Action": [
@@ -68,13 +68,13 @@ resource "aws_ecr_repository_policy" "challenge4" {
   EOF
 }
 
-resource "aws_ecs_cluster" "challenge4ecs" {
-  name = "challenge4ecs"
+resource "aws_ecs_cluster" "challenge5ecs" {
+  name = "challenge5ecs"
 }
 
 resource "aws_ecs_service" "demo-ecs-service-two" {
   name            = "demo-app"
-  cluster         = aws_ecs_cluster.challenge4ecs.id
+  cluster         = aws_ecs_cluster.challenge5ecs.id
   task_definition = aws_ecs_task_definition.demo-ecs-task-definition.arn
   launch_type     = "FARGATE"
   network_configuration {
@@ -120,8 +120,8 @@ resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
 EOF
 }
 
-resource "aws_cloudwatch_log_group" "bg-challenge4" {
-  name = "bg-challenge4"
+resource "aws_cloudwatch_log_group" "bg-challenge5" {
+  name = "bg-challenge5"
 
   tags = {
     Environment = "noc-sandbox"
