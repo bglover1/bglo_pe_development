@@ -147,12 +147,21 @@ resource "aws_security_group" "allow_egress_all" {
   }
 }
 
-resource "aws_db_subnet_group" "bensrds" {
+resource "aws_subnet" "bensrds" {
+  vpc_id     = "vpc-06d3f8ac2206caa8b"
+  cidr_block = "100.67.16.0/22"
+
+  tags = {
+    Name = "rv-sandbox"
+  }
+}
+
+resource "aws_db_subnet_group" "bensrds_sg" {
   name       = "bensrds"
   subnet_ids = data.aws_subnet_ids.bensrds.ids
 
   tags = {
-    Name = "My DB subnet group"
+    Name = "Challenge5 RDS"
   }
 }
 
