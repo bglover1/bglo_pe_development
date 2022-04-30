@@ -114,7 +114,10 @@ resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
                "awslogs-region":"us-east-1",
                "awslogs-stream-prefix":"ecs"
             }
-      }
+      },
+      "environment": [
+       {"name": "DB_HOST", "value": aws_db_instance.bensrds.address,  }
+      ],
   }
 ]
 EOF
