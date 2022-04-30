@@ -2,27 +2,27 @@ resource "aws_db_instance" "bensrds" {
   identifier             = "bensrds"
   instance_class         = "db.t3.micro"
   allocated_storage      = 5
-  engine                 = "postgres"
-  engine_version         = "13.1"
-  username               = "edu"
+  engine                 = "mysql"
+  engine_version         = "5.7"
+  username               = var.user_name
   password               = var.db_password
-  db_subnet_group_name   = aws_db_subnet_group.education.name
+#  db_subnet_group_name   = aws_db_subnet_group.education.name
   vpc_security_group_ids = [aws_security_group.rds.id]
-  parameter_group_name   = aws_db_parameter_group.education.name
+#  parameter_group_name   = aws_db_parameter_group.education.name
   publicly_accessible    = true
   skip_final_snapshot    = true
 }
 
-resource "aws_db_subnet_group" "default" {
+resource "aws_db_subnet_group" "bensrds" {
   name       = "main"
-  subnet_ids = [aws_subnet.frontend.id, aws_subnet.backend.id]
+  subnet_ids = 
 
   tags = {
     Name = "My DB subnet group"
   }
 }
 
-resource "aws_db_security_group" "default" {
+resource "aws_db_security_group" "rds" {
   name = "rds_sg"
 
   ingress {
