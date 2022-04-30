@@ -12,3 +12,11 @@ resource "aws_db_instance" "bensrds" {
   publicly_accessible    = true
   skip_final_snapshot    = true
 }
+
+resource "aws_db_security_group" "rds" {
+  name = "rds_sg"
+
+  ingress {
+    cidr = "100.67.16.0/22"
+  }
+}
