@@ -13,10 +13,15 @@ resource "aws_db_instance" "bensrds" {
   skip_final_snapshot    = true
 }
 
-resource "aws_db_security_group" "rds" {
-  name = "rds_sg"
+resource "aws_security_group" "rds_sg" {
+  name = "rds-sg"
 
-  ingress {
-    cidr = "100.67.16.0/22"
+    ingress {
+    from_port        = 3306
+    to_port          = 3306
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
+
 }
