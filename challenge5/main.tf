@@ -116,7 +116,7 @@ resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
             }
       },
       "environment": [
-       {"name": "DB_HOST", "value": aws_db_instance.bensrds.address,  }
+       {"name": "DB_HOST", "value": "",  }
       ],
   }
 ]
