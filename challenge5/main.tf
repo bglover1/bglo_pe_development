@@ -148,8 +148,8 @@ resource "aws_security_group" "allow_egress_all" {
 }
 
 resource "aws_db_subnet_group" "bensrds" {
-  name       = "main"
-  subnet_ids = data.aws_db_subnet_group.bensrds.id
+  name       = "bensrds"
+  subnet_ids = data.aws_subnet_ids.bensrds.ids
 
   tags = {
     Name = "My DB subnet group"
