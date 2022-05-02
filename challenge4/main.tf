@@ -51,7 +51,7 @@ resource "aws_ecr_repository_policy" "challenge4" {
       {
         "Sid": "adds full ecr access to the challenge4 repository",
         "Effect": "Allow",
-        "Principal": "*",
+        "Principal": "AWS": "arn:aws:iam::676636886737:AWSReservedSSO_SandboxAdmin_d342697e7fcc0f35/bglover"
         "Action": [
           "ecr:BatchCheckLayerAvailability",
           "ecr:BatchGetImage",
