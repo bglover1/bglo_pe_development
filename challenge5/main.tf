@@ -1,23 +1,24 @@
 resource "aws_iam_role" "ben_iam_for_ecs" {
-  name = "ben-iam-for-ecs"
+  name               = "ben-iam-for-ecs"
   assume_role_policy = data.aws_iam_policy_document.ben_iam_for_ecs.json
 
-    inline_policy {
+  inline_policy {
     name = "ben_iam_for_ecs"
 
     policy = jsonencode({
       Version = "2012-10-17"
       Statement = [
         {
-          Action   = [
-            "ecs:*", 
+          Action = [
+            "ecs:*",
             "ecr:*",
-            "ecr:GetAuthorizationToken", 
+            "ecr:GetAuthorizationToken",
             "ecr:BatchCheckLayerAvailability",
             "ecr:GetDownloadUrlForLayer",
             "ecr:BatchGetImage",
             "logs:CreateLogStream",
-            "logs:PutLogEvents"
+            "logs:PutLogEvents",
+            "ssm:GetParameters"
           ]
           Effect   = "Allow"
           Resource = "*"
@@ -85,42 +86,27 @@ resource "aws_ecs_service" "demo-ecs-service-two" {
   desired_count = 1
 }
 
+data "template_file" "task_template_parameterstore" {
+  template = file("./task_def.tpl")
+  vars = {
+    database_password = aws_ssm_parameter.database_password_parameter.arn
+  }
+}
 resource "aws_ecs_task_definition" "demo-ecs-task-definition" {
   family                   = "ecs-task-definition-demo"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   memory                   = "1024"
   cpu                      = "512"
-  execution_role_arn = aws_iam_role.ben_iam_for_ecs.arn
-  container_definitions    = <<EOF
-[
-  {
-    "name": "demo-container",
-    "image": "676636886737.dkr.ecr.us-east-1.amazonaws.com/challenge4:latest",
-    "memory": 1024,
-    "cpu": 512,
-    "essential": true,
-    "entryPoint": ["./app"],
-    "portMappings": [
-      {
-        "containerPort": 80,
-        "hostPort": 80
-      }
-    ],
-    "logConfiguration":{
-            "logDriver":"awslogs",
-            "options":{
-               "awslogs-group":"bg-challenge4",
-               "awslogs-region":"us-east-1",
-               "awslogs-stream-prefix":"ecs"
-            }
-      },
-      "environment": [
-       {"name": "DB_HOST", "value": "",  }
-      ],
-  }
-]
-EOF
+  execution_role_arn       = aws_iam_role.ben_iam_for_ecs.arn
+  container_definitions    = data.template_file.task_template_parameterstore.rendered
+}
+
+resource "aws_ssm_parameter" "database_password_parameter" {
+  name        = "/sandbox/database/password/master"
+  description = "sandbox environment database password"
+  type        = "SecureString"
+  value       = "changeme"
 }
 
 resource "aws_cloudwatch_log_group" "bg-challenge5" {
